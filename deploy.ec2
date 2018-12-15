@@ -1,0 +1,23 @@
+[root@puppetmaster ~]# cat /root/deploy.ec2
+ec2_instance { 'devopsagent1':
+  ensure              => 'running',
+  availability_zone   => 'us-east-1c',
+  image_id            => 'ami-011b3ccf1bd6db744',
+  instance_type       => 't2.micro',
+  interfaces          => {
+  'eni-0dad3ddece675f6a0' => {
+    'security_groups' => [
+      {
+        'group_name' => 'puppet',
+        'group_id' => 'sg-059c9558639f581fe'
+      }]
+  }
+},
+  key_name            => 'newkeythedevopscloud',
+  monitoring          => false,
+  region              => 'us-east-1',
+  security_groups     => ['puppet'],
+  subnet              => 'thedevopscloud',
+  tenancy             => 'default',
+  user_data           => template('awspuppet/userdata.sh.erb')
+}
